@@ -28,54 +28,22 @@ fun HomeScreenAppBar(
     CenterAlignedTopAppBar(
         title = {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(
-                    text = "olcbox",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = "multiplatform olcrtc configurator",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Text(text = "olcbox", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
+                Text(text = "multiplatform olcrtc configurator", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         },
         navigationIcon = {
             if (showAppSettingsButton) {
-                IconButton(onClick = onAppSettingsClick) {
-                    Icon(
-                        imageVector = Icons.Outlined.Settings,
-                        contentDescription = "Application settings",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                IconButton(onClick = onAppSettingsClick) { Icon(Icons.Outlined.Settings, contentDescription = "Application settings", tint = MaterialTheme.colorScheme.onSurface) }
             } else {
-                IconButton(onClick = onHistoryClick) {
-                    Icon(
-                        imageVector = Icons.Outlined.History,
-                        contentDescription = "History",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                IconButton(onClick = onHistoryClick) { Icon(Icons.Outlined.History, contentDescription = "History", tint = MaterialTheme.colorScheme.onSurface) }
             }
         },
         actions = {
             if (showSplitTunnelingButton) {
-                IconButton(onClick = onSplitTunnelingClick) {
-                    Icon(
-                        imageVector = Icons.Outlined.Shield,
-                        contentDescription = "Split tunneling",
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
+                IconButton(onClick = onSplitTunnelingClick) { Icon(Icons.Outlined.Shield, contentDescription = "Split tunneling", tint = MaterialTheme.colorScheme.onSurface) }
             }
-            IconButton(onClick = onAddClick) {
-                Icon(
-                    imageVector = Icons.Outlined.Add,
-                    contentDescription = "Add configuration",
-                    tint = MaterialTheme.colorScheme.onSurface
-                )
-            }
+            IconButton(onClick = onAddClick) { Icon(Icons.Outlined.Add, contentDescription = "Add configuration", tint = MaterialTheme.colorScheme.onSurface) }
         }
     )
 }

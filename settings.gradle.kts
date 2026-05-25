@@ -11,6 +11,7 @@ pluginManagement {
             }
         }
         gradlePluginPortal()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         mavenCentral()
     }
 }
@@ -26,6 +27,7 @@ dependencyResolutionManagement {
             }
         }
         mavenCentral()
+        maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         flatDir {
             dirs("androidApp/jniLibs/arm64-v8a")
         }

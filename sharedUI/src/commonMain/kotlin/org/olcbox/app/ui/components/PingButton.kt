@@ -60,102 +60,35 @@ fun PingButton(
 
     val stateIcon: @Composable () -> Unit = {
         when (pingState) {
-            is PingState.Error -> Icon(
-                imageVector = Icons.Rounded.PriorityHigh,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error,
-                modifier = Modifier.size(24.dp)
-            )
-
-            is PingState.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(22.dp),
-                    color = MaterialTheme.colorScheme.primary,
-                    strokeWidth = 2.dp
-                )
-            }
-
-            is PingState.Success -> Icon(
-                imageVector = Icons.Rounded.Check,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                modifier = Modifier.size(24.dp)
-            )
-
-            else -> Icon(
-                imageVector = Icons.Outlined.Bolt,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
-            )
+            is PingState.Error -> Icon(Icons.Rounded.PriorityHigh, null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(24.dp))
+            is PingState.Loading -> CircularProgressIndicator(modifier = Modifier.size(22.dp), color = MaterialTheme.colorScheme.primary, strokeWidth = 2.dp)
+            is PingState.Success -> Icon(Icons.Rounded.Check, null, tint = MaterialTheme.colorScheme.onSecondaryContainer, modifier = Modifier.size(24.dp))
+            else -> Icon(Icons.Outlined.Bolt, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(24.dp))
         }
     }
 
     Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(enabled = pingState !is PingState.Loading) {
-                homeViewModel.viewModelScope.launch {
-                    pingState = PingState.Loading
-                    val config = configGetter()
-                    val result = if (config != null) {
-                        homeViewModel.performPingFor(config)
-                    } else {
-                        homeViewModel.performPing()
-                    }
-
-                    pingState = if (result != null) {
-                        PingState.Success(result)
-                    } else {
-                        PingState.Error("Offline")
-                    }
-                }
+        modifier = modifier.fillMaxWidth().clickable(enabled = pingState !is PingState.Loading) {
+            homeViewModel.viewModelScope.launch {
+                pingState = PingState.Loading
+                val result = configGetter()?.let { homeViewModel.performPingFor(it) } ?: homeViewModel.performPing()
+                pingState = if (result != null) PingState.Success(result) else PingState.Error("Offline")
             }
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.outlineVariant,
-                shape = RoundedCornerShape(16.dp)
-            ),
+        }.border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp)),
         shape = RoundedCornerShape(16.dp),
-        color = if (pingState is PingState.Error) {
-            MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
-        } else {
-            MaterialTheme.colorScheme.surfaceContainerLow
-        },
+        color = if (pingState is PingState.Error) MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f) else MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = "Connectivity Check",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Text(
-                    text = descriptionText,
-                    fontSize = 13.sp,
-                    color = if (pingState is PingState.Error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Text("Connectivity Check", fontSize = 18.sp, fontWeight = FontWeight.Medium, color = MaterialTheme.colorScheme.onSurface)
+                Text(descriptionText, fontSize = 13.sp, color = if (pingState is PingState.Error) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant)
             }
-
-            Surface(
-                modifier = Modifier.size(40.dp),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    stateIcon()
-                }
+            Surface(modifier = Modifier.size(40.dp), shape = CircleShape, color = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f)) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { stateIcon() }
             }
         }
     }

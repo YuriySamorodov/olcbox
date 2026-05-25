@@ -26,12 +26,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-sealed class StartButtonState {
-    object Idle : StartButtonState()
-    object Loading : StartButtonState()
-    object Success : StartButtonState()
-}
-
 @Composable
 fun StartButton(
     modifier: Modifier = Modifier,
@@ -60,22 +54,13 @@ fun StartButton(
     Box(
         modifier = modifier
             .size(200.dp)
-            .background(
-                color = when {
-                    isActive -> MaterialTheme.colorScheme.secondaryContainer
-                    requiresSetup -> MaterialTheme.colorScheme.surfaceContainer
-                    else -> MaterialTheme.colorScheme.surfaceContainer
-                },
-                shape = CircleShape
-            )
+            .background(MaterialTheme.colorScheme.surfaceContainer, CircleShape)
             .padding(8.dp)
-            .background(color = MaterialTheme.colorScheme.surface, shape = CircleShape)
+            .background(MaterialTheme.colorScheme.surface, CircleShape)
             .padding(6.dp)
             .clip(CircleShape)
-            .background(color = mainButtonColor)
-            .clickable(enabled = enabled) {
-                onClick()
-            },
+            .background(mainButtonColor)
+            .clickable(enabled = enabled) { onClick() },
         contentAlignment = Alignment.Center
     ) {
         if (isLoading) {

@@ -25,38 +25,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun RefreshButton(
-    isRefreshing: Boolean,
-    onClick: () -> Unit,
-    tint: Color
-) {
+fun RefreshButton(isRefreshing: Boolean, onClick: () -> Unit, tint: Color) {
     val rotation by if (isRefreshing) {
         val infiniteTransition = rememberInfiniteTransition()
-        infiniteTransition.animateFloat(
-            initialValue = 0f,
-            targetValue = 360f,
-            animationSpec = infiniteRepeatable(
-                animation = tween(1000, easing = LinearEasing),
-                repeatMode = RepeatMode.Restart
-            ), label = ""
-        )
+        infiniteTransition.animateFloat(initialValue = 0f, targetValue = 360f, animationSpec = infiniteRepeatable(animation = tween(1000, easing = LinearEasing), repeatMode = RepeatMode.Restart), label = "")
     } else {
         remember { mutableFloatStateOf(0f) }
     }
 
-    TextButton(
-        modifier = Modifier
-            .height(48.dp),
-        onClick = onClick,
-        colors = ButtonDefaults.textButtonColors(contentColor = tint)
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.Refresh,
-            contentDescription = null,
-            modifier = Modifier
-                .size(18.dp)
-                .rotate(rotation)
-        )
+    TextButton(modifier = Modifier.height(48.dp), onClick = onClick, colors = ButtonDefaults.textButtonColors(contentColor = tint)) {
+        Icon(imageVector = Icons.Rounded.Refresh, contentDescription = null, modifier = Modifier.size(18.dp).rotate(rotation))
         Spacer(Modifier.size(8.dp))
         Text("Ping")
     }

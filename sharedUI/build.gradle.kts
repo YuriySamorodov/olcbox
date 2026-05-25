@@ -19,6 +19,8 @@ plugins {
 val olcrtcRepoPath = providers.environmentVariable("OLCRTC_REPO")
     .orElse(rootProject.layout.projectDirectory.asFile.parentFile.resolve("olcrtc").absolutePath)
 val olcrtcRepoDir = file(olcrtcRepoPath.get())
+val gomobileExecutable = System.getenv("GOMOBILE")
+    ?: file(System.getProperty("user.home")).resolve("go/bin/gomobile").absolutePath
 val olcrtcAndroidAar = layout.buildDirectory.file("generated/olcrtc/olcrtc.aar")
 val olcrtcAndroidAarFile = olcrtcAndroidAar.get().asFile
 val olcrtcIosXcframework = layout.buildDirectory.dir("generated/olcrtc/ios/OlcRtcMobile.xcframework")
@@ -65,7 +67,7 @@ val buildOlcrtcAndroidAar by tasks.registering(Exec::class) {
 
     workingDir = olcrtcRepoDir
     commandLine(
-        "gomobile",
+        gomobileExecutable,
         "bind",
         "-target=android/arm,android/arm64,android/amd64",
         "-androidapi",
@@ -97,7 +99,7 @@ val buildOlcrtcIosXcframework by tasks.registering(Exec::class) {
     }
 
     commandLine(
-        "gomobile",
+        gomobileExecutable,
         "bind",
         "-target=ios",
         "-ldflags",
@@ -145,10 +147,9 @@ kotlin {
             api(libs.compose.ui)
             api(libs.compose.foundation)
             api(libs.compose.resources)
-            api(libs.compose.ui.tooling.preview)
             api(libs.compose.material3)
-
             implementation(compose.materialIconsExtended)
+            
             implementation(libs.kermit)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.client.core)
@@ -161,7 +162,6 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.multiplatformSettings)
             implementation(libs.kstore)
-            implementation(libs.materialKolor)
             implementation(libs.androidx.datastore.preferences)
         }
 
@@ -184,6 +184,9 @@ kotlin {
             implementation(libs.kstore.file)
             implementation(libs.zxing.core)
             implementation(olcrtcAndroidAarDependency)
+            implementation(libs.materialKolor)
+            implementation(compose.materialIconsExtended)
+            implementation(libs.compose.material3)
         }
 
         jvmMain.dependencies {
@@ -192,6 +195,10 @@ kotlin {
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kstore.file)
             implementation(libs.jna)
+            implementation(libs.materialKolor)
+            implementation(compose.materialIconsExtended)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.compose.material3)
         }
 
         iosMain.dependencies {

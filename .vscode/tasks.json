@@ -1,0 +1,99 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Validate sharedUI macosX64",
+			"type": "shell",
+			"command": "./gradlew",
+			"args": [
+				":sharedUI:compileKotlinMacosX64",
+				"-Dhttps.protocols=TLSv1.2,TLSv1.3",
+				"--no-daemon",
+				"--stacktrace"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Inspect macosX64 dependency graph",
+			"type": "shell",
+			"command": "./gradlew",
+			"args": [
+				":sharedUI:dependencies",
+				"--configuration",
+				"macosX64CompileKlibraries",
+				"--no-daemon"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Validate sharedUI macosX64 after Compose alignment",
+			"type": "shell",
+			"command": "./gradlew",
+			"args": [
+				":sharedUI:compileKotlinMacosX64",
+				"-Dhttps.protocols=TLSv1.2,TLSv1.3",
+				"--no-daemon",
+				"--stacktrace"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Inspect macosX64 dependency graph after 1.9.3/1.9.0 split",
+			"type": "shell",
+			"command": "./gradlew",
+			"args": [
+				":sharedUI:dependencies",
+				"--configuration",
+				"macosX64CompileKlibraries",
+				"--no-daemon"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Recheck sharedUI macosX64 compile",
+			"type": "shell",
+			"command": "./gradlew",
+			"args": [
+				":sharedUI:compileKotlinMacosX64",
+				"-Dhttps.protocols=TLSv1.2,TLSv1.3",
+				"--no-daemon",
+				"--stacktrace"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"group": "build"
+		},
+		{
+			"label": "Package desktop release for current OS",
+			"type": "shell",
+			"command": "./gradlew",
+			"args": [
+				":desktopApp:packageReleaseDistributionForCurrentOS",
+				"--no-daemon"
+			],
+			"isBackground": false,
+			"problemMatcher": [
+				"$gradle"
+			],
+			"group": "build"
+		}
+	]
+}

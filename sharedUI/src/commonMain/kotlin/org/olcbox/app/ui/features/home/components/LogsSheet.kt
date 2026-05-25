@@ -38,145 +38,47 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogsSheet(
-    logs: List<String>,
-    onSaveClick: () -> Unit,
-    onShareClick: () -> Unit,
-    onDismiss: () -> Unit
-) {
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true
-    )
-
+fun LogsSheet(logs: List<String>, onSaveClick: () -> Unit, onShareClick: () -> Unit, onDismiss: () -> Unit) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope()
-
-    val closeSheet = {
-        scope.launch {
-            sheetState.hide()
-            onDismiss()
-        }
-    }
-
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        dragHandle = { BottomSheetDefaults.DragHandle() }
-    ) {
-        LogsContent(
-            logs = logs,
-            modifier = Modifier.fillMaxHeight(0.8f),
-            onSaveClick = onSaveClick,
-            onShareClick = onShareClick,
-            onCloseClick = { closeSheet() }
-        )
+    val closeSheet = { scope.launch { sheetState.hide(); onDismiss() } }
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState, dragHandle = { BottomSheetDefaults.DragHandle() }) {
+        LogsContent(logs = logs, modifier = Modifier.fillMaxHeight(0.8f), onSaveClick = onSaveClick, onShareClick = onShareClick, onCloseClick = { closeSheet() })
     }
 }
 
 @Composable
-fun LogsContent(
-    logs: List<String>,
-    modifier: Modifier = Modifier,
-    onSaveClick: () -> Unit,
-    onShareClick: () -> Unit,
-    onCloseClick: () -> Unit
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 16.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Application Logs",
-                style = MaterialTheme.typography.headlineSmall,
-            )
-
+fun LogsContent(logs: List<String>, modifier: Modifier = Modifier, onSaveClick: () -> Unit, onShareClick: () -> Unit, onCloseClick: () -> Unit) {
+    Column(modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp).padding(bottom = 16.dp)) {
+        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text(text = "Application Logs", style = MaterialTheme.typography.headlineSmall)
             Row(verticalAlignment = Alignment.CenterVertically) {
-                TextButton(
-                    enabled = logs.isNotEmpty(),
-                    onClick = onSaveClick
-                ) {
-                    Text("Save")
-                }
-                TextButton(
-                    enabled = logs.isNotEmpty(),
-                    onClick = onShareClick
-                ) {
-                    Text("Share")
-                }
-
-                IconButton(onClick = onCloseClick) {
-                    Icon(
-                        imageVector = Icons.Rounded.Close,
-                        contentDescription = "Close logs",
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                TextButton(enabled = logs.isNotEmpty(), onClick = onSaveClick) { Text("Save") }
+                TextButton(enabled = logs.isNotEmpty(), onClick = onShareClick) { Text("Share") }
+                IconButton(onClick = onCloseClick) { Icon(Icons.Rounded.Close, contentDescription = "Close logs", tint = MaterialTheme.colorScheme.onSurfaceVariant) }
             }
         }
-
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color.Black.copy(alpha = 0.05f))
-        ) {
-            LogLines(
-                logs = logs,
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(12.dp)
-            )
+        Box(modifier = Modifier.weight(1f).fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(Color.Black.copy(alpha = 0.05f))) {
+            LogLines(logs = logs, modifier = Modifier.fillMaxSize(), contentPadding = PaddingValues(12.dp))
         }
     }
 }
 
 @Composable
-fun LogLines(
-    logs: List<String>,
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(0.dp)
-) {
+fun LogLines(logs: List<String>, modifier: Modifier = Modifier, contentPadding: PaddingValues = PaddingValues(0.dp)) {
     val listState = rememberLazyListState()
-
-    LaunchedEffect(logs.size) {
-        if (logs.isNotEmpty()) {
-            listState.scrollToItem(logs.lastIndex)
-        }
-    }
-
-    LazyColumn(
-        state = listState,
-        modifier = modifier,
-        contentPadding = contentPadding
-    ) {
-        itemsIndexed(
-            items = logs,
-            key = { index, log -> "$index:$log" }
-        ) { _, log ->
-            Text(
-                text = log,
-                fontSize = 12.sp,
-                color = getLogColor(log),
-                modifier = Modifier.padding(vertical = 2.dp)
-            )
+    LaunchedEffect(logs.size) { if (logs.isNotEmpty()) listState.scrollToItem(logs.lastIndex) }
+    LazyColumn(state = listState, modifier = modifier, contentPadding = contentPadding) {
+        itemsIndexed(items = logs, key = { index, log -> "$index:$log" }) { _, log ->
+            Text(text = log, fontSize = 12.sp, color = getLogColor(log), modifier = Modifier.padding(vertical = 2.dp))
         }
     }
 }
 
 @Composable
-private fun getLogColor(log: String): Color {
-    return when {
-        log.contains("❌") || log.contains("Error") -> Color.Red
-        log.contains("✅") || log.contains("OK") -> Color(0xFF4CAF50)
-        log.contains("⚠️") -> Color(0xFFFFA000)
-        else -> MaterialTheme.colorScheme.onSurfaceVariant
-    }
+private fun getLogColor(log: String): Color = when {
+    log.contains("❌") || log.contains("Error") -> Color.Red
+    log.contains("✅") || log.contains("OK") -> Color(0xFF4CAF50)
+    log.contains("⚠️") -> Color(0xFFFFA000)
+    else -> MaterialTheme.colorScheme.onSurfaceVariant
 }

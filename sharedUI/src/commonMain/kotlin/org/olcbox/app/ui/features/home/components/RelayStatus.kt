@@ -27,27 +27,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun RelayStatus(
-    isActive: Boolean,
-    requiresSetup: Boolean = false,
-    modifier: Modifier = Modifier
-) {
-    val containerColor by animateColorAsState(
-        targetValue = when {
-            isActive -> MaterialTheme.colorScheme.primaryContainer
-            requiresSetup -> MaterialTheme.colorScheme.surfaceContainerLow
-            else -> MaterialTheme.colorScheme.surfaceContainerLow
-        },
-        label = "relayStatusContainer"
-    )
-    val iconContainerColor by animateColorAsState(
-        targetValue = when {
-            isActive -> MaterialTheme.colorScheme.primary
-            requiresSetup -> MaterialTheme.colorScheme.secondaryContainer
-            else -> MaterialTheme.colorScheme.secondaryContainer
-        },
-        label = "relayStatusIconContainer"
-    )
+fun RelayStatus(isActive: Boolean, requiresSetup: Boolean = false, modifier: Modifier = Modifier) {
+    val containerColor by animateColorAsState(targetValue = when {
+        isActive -> MaterialTheme.colorScheme.primaryContainer
+        requiresSetup -> MaterialTheme.colorScheme.surfaceContainerLow
+        else -> MaterialTheme.colorScheme.surfaceContainerLow
+    }, label = "relayStatusContainer")
+    val iconContainerColor by animateColorAsState(targetValue = when {
+        isActive -> MaterialTheme.colorScheme.primary
+        requiresSetup -> MaterialTheme.colorScheme.secondaryContainer
+        else -> MaterialTheme.colorScheme.secondaryContainer
+    }, label = "relayStatusIconContainer")
     val iconContentColor = when {
         isActive -> MaterialTheme.colorScheme.onPrimary
         requiresSetup -> MaterialTheme.colorScheme.onSecondaryContainer
@@ -58,67 +48,23 @@ fun RelayStatus(
         requiresSetup -> MaterialTheme.colorScheme.onSurface
         else -> MaterialTheme.colorScheme.onSurface
     }
-    val title = when {
-        isActive -> "Relay Active"
-        requiresSetup -> "Relay Inactive"
-        else -> "Relay Inactive"
-    }
+    val title = if (isActive) "Relay Active" else "Relay Inactive"
     val subtitle = when {
         isActive -> "Connected"
         requiresSetup -> "No location selected"
         else -> "Disconnected"
     }
-
-    Surface(
-        modifier = modifier.width(272.dp),
-        shape = RoundedCornerShape(16.dp),
-        color = containerColor,
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Surface(
-                modifier = Modifier.size(48.dp),
-                shape = CircleShape,
-                color = iconContainerColor,
-                contentColor = iconContentColor
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    if (isActive) {
-                        Icon(
-                            tint = iconContentColor,
-                            imageVector = Icons.Rounded.VerifiedUser,
-                            contentDescription = "Active"
-                        )
-                    } else {
-                        Icon(
-                            tint = iconContentColor,
-                            imageVector = Icons.Outlined.Shield,
-                            contentDescription = "Inactive"
-                        )
-                    }
+    Surface(modifier = modifier.width(272.dp), shape = RoundedCornerShape(16.dp), color = containerColor) {
+        Row(modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Surface(modifier = Modifier.size(48.dp), shape = CircleShape, color = iconContainerColor, contentColor = iconContentColor) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Icon(tint = iconContentColor, imageVector = if (isActive) Icons.Rounded.VerifiedUser else Icons.Outlined.Shield, contentDescription = if (isActive) "Active" else "Inactive")
                 }
             }
-
             Spacer(modifier = Modifier.width(24.dp))
-
             Column {
-                Text(
-                    text = title,
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = textColor
-                )
-                Text(
-                    text = subtitle,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = textColor.copy(alpha = 0.82f)
-                )
+                Text(text = title, fontSize = 22.sp, fontWeight = FontWeight.Medium, color = textColor)
+                Text(text = subtitle, fontSize = 14.sp, fontWeight = FontWeight.Normal, color = textColor.copy(alpha = 0.82f))
             }
         }
     }

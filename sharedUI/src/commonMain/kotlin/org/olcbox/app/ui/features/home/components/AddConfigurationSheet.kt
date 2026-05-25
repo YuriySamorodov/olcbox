@@ -51,154 +51,44 @@ fun AddConfigurationSheet(
     onAddCustomLocationClick: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = sheetState,
-        dragHandle = { BottomSheetDefaults.DragHandle() }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 32.dp)
-        ) {
-            AddSheetHeader(
-                title = "Add connection",
-                subtitle = "Subscription or custom location"
-            )
-
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState, dragHandle = { BottomSheetDefaults.DragHandle() }) {
+        Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(bottom = 32.dp)) {
+            AddSheetHeader(title = "Add connection", subtitle = "Subscription or custom location")
             Spacer(Modifier.height(20.dp))
-
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                if (canScanQr) {
-                    AddSheetAction(
-                        title = "Scan QR code",
-                        value = "Subscription or olcrtc URI",
-                        icon = Icons.Outlined.QrCodeScanner,
-                        onClick = onScanQrClick
-                    )
-                }
-
-                AddSheetAction(
-                    title = "Paste link or URI",
-                    value = "HTTP, HTTPS, or olcrtc URI",
-                    icon = Icons.AutoMirrored.Outlined.Input,
-                    onClick = onPasteLinkClick
-                )
-
-                AddSheetAction(
-                    title = "Import from file",
-                    value = "Read subscription or config file",
-                    icon = Icons.Outlined.FileOpen,
-                    onClick = onImportFileClick
-                )
-
-                if (hasSubscriptions) {
-                    AddSheetAction(
-                        title = "Update subscriptions",
-                        value = "Refresh imported subscription locations",
-                        icon = Icons.Outlined.Refresh,
-                        showChevron = false,
-                        onClick = onUpdateSubscriptionsClick
-                    )
-                }
-
-                AddSheetAction(
-                    title = "Create custom location",
-                        value = "Enter room, key, provider, and transport",
-                    icon = Icons.Outlined.Add,
-                    onClick = onAddCustomLocationClick
-                )
+                if (canScanQr) AddSheetAction("Scan QR code", "Subscription or olcrtc URI", Icons.Outlined.QrCodeScanner, onClick = onScanQrClick)
+                AddSheetAction("Paste link or URI", "HTTP, HTTPS, or olcrtc URI", Icons.AutoMirrored.Outlined.Input, onClick = onPasteLinkClick)
+                AddSheetAction("Import from file", "Read subscription or config file", Icons.Outlined.FileOpen, onClick = onImportFileClick)
+                if (hasSubscriptions) AddSheetAction("Update subscriptions", "Refresh imported subscription locations", Icons.Outlined.Refresh, showChevron = false, onClick = onUpdateSubscriptionsClick)
+                AddSheetAction("Create custom location", "Enter room, key, provider, and transport", Icons.Outlined.Add, onClick = onAddCustomLocationClick)
             }
         }
     }
 }
 
 @Composable
-private fun AddSheetHeader(
-    title: String,
-    subtitle: String,
-) {
+private fun AddSheetHeader(title: String, subtitle: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Column {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Text(text = title, style = MaterialTheme.typography.headlineSmall, color = MaterialTheme.colorScheme.onSurface)
+            Text(text = subtitle, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
 
 @Composable
-private fun AddSheetAction(
-    title: String,
-    value: String,
-    icon: ImageVector,
-    showChevron: Boolean = true,
-    onClick: () -> Unit
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(72.dp)
-            .clip(RoundedCornerShape(18.dp))
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(18.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
-    ) {
-        Row(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Surface(
-                modifier = Modifier.size(40.dp),
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    modifier = Modifier.padding(10.dp)
-                )
+private fun AddSheetAction(title: String, value: String, icon: ImageVector, showChevron: Boolean = true, onClick: () -> Unit) {
+    Surface(modifier = Modifier.fillMaxWidth().height(72.dp).clip(RoundedCornerShape(18.dp)).clickable(onClick = onClick), shape = RoundedCornerShape(18.dp), color = MaterialTheme.colorScheme.surfaceContainer, border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)) {
+        Row(modifier = Modifier.padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically) {
+            Surface(modifier = Modifier.size(40.dp), shape = CircleShape, color = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant) {
+                Icon(imageVector = icon, contentDescription = null, modifier = Modifier.padding(10.dp))
             }
-
             Spacer(modifier = Modifier.width(14.dp))
-
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = value,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    fontSize = 13.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Text(text = title, color = MaterialTheme.colorScheme.onSurface, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(text = value, color = MaterialTheme.colorScheme.onSurfaceVariant, fontSize = 13.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
-
-            if (showChevron) {
-                Icon(
-                    imageVector = Icons.Rounded.ChevronRight,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
+            if (showChevron) Icon(imageVector = Icons.Rounded.ChevronRight, contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.size(24.dp))
         }
     }
 }
